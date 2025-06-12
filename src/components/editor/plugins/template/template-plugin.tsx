@@ -54,3 +54,9 @@ export { TemplateFieldButton } from './components/template-field-button';
 // Transforms export
 export { insertTemplateField } from './transforms/insert-template-field';
 
+// Template-Kit
+export { TemplateKit } from './template-kit';
+
+// example fields export
+export { templateFields } from './template-fields-example';
+

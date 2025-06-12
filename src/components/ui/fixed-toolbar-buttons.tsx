@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 
 import {
   ArrowUpToLineIcon,
@@ -17,6 +16,7 @@ import {
 import { KEYS } from 'platejs';
 import { useEditorReadOnly } from 'platejs/react';
 
+import { TemplateFieldButton } from '../editor/plugins/template/template-plugin';
 import { AIToolbarButton } from './ai-toolbar-button';
 import { AlignToolbarButton } from './align-toolbar-button';
 import { CommentToolbarButton } from './comment-toolbar-button';
@@ -148,6 +148,10 @@ export function FixedToolbarButtons() {
 
           <ToolbarGroup>
             <MoreToolbarButton />
+          </ToolbarGroup>
+
+          <ToolbarGroup>
+            <TemplateFieldButton/>
           </ToolbarGroup>
         </>
       )}

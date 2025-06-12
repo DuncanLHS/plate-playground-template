@@ -1,11 +1,11 @@
 'use client';
 
+import { TemplateBlockElement } from './components/template-block-element';
+import { TemplateInlineElement } from './components/template-inline-element';
 import {
   TemplateBlockPlugin,
   TemplateInlinePlugin,
-} from '../template-plugin';
-import { TemplateBlockElement } from './template-block-element';
-import { TemplateInlineElement } from './template-inline-element';
+} from './template-plugin';
 
 export const TemplateKit = [
   TemplateInlinePlugin.withComponent(TemplateInlineElement),

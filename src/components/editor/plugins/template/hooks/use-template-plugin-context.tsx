@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
-import { useEditorRef } from 'platejs/react';
+import { useEditorRef, type PlateEditor } from 'platejs/react';
 
 import type { TemplateField, TemplatePluginContextValue } from '../types';
 
@@ -8,16 +8,16 @@ const TemplatePluginContext = createContext<TemplatePluginContextValue | null>(n
 
 export function TemplatePluginProvider({ 
   children, 
-  initialFields = [] 
+  initialFields = [],
+  editor: editorProp
 }: { 
   children: React.ReactNode;
   initialFields?: TemplateField[];
+  editor?: PlateEditor;
 }) {
-  const editor = useEditorRef();
-  const [fields, setFields] = useState<TemplateField[]>(initialFields);
-  useEffect(() => {
-    setFields(initialFields);
-  }, [initialFields]);
+  const editorFromHook = useEditorRef();
+  const editor = editorProp || editorFromHook; 
+  const [fields, setFields] = useState<TemplateField[]>(() => initialFields);
 
   const addField = (field: TemplateField) => {
     setFields((prev) => {

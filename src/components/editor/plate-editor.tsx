@@ -1,26 +1,33 @@
 'use client';
 
-import * as React from 'react';
-
 import { Plate, usePlateEditor } from 'platejs/react';
 
 import { EditorKit } from '@/components/editor/editor-kit';
+
 import { SettingsDialog } from '@/components/editor/settings-dialog';
 import { Editor, EditorContainer } from '@/components/ui/editor';
+import { TemplatePluginProvider } from './plugins/template/hooks/use-template-plugin-context';
+import { createTemplatePlugin, templateFields, TemplateKit } from './plugins/template/template-plugin';
 
 export function PlateEditor() {
   const editor = usePlateEditor({
-    plugins: EditorKit,
+    plugins: [
+      ...EditorKit,
+       ...TemplateKit,
+        createTemplatePlugin({ fields: templateFields })
+      ],
     value,
   });
 
   return (
-    <Plate editor={editor}>
-      <EditorContainer>
-        <Editor variant="demo" />
-      </EditorContainer>
+      <Plate editor={editor}>
+    <TemplatePluginProvider editor={editor} initialFields={templateFields}>
+        <EditorContainer>
+          <Editor variant="demo" />
+        </EditorContainer>
 
-      <SettingsDialog />
+        <SettingsDialog />
+      </TemplatePluginProvider>
     </Plate>
   );
 }
