@@ -1,14 +1,15 @@
 import { useCallback } from 'react';
 
-import type { Path } from 'platejs';
+import type { Path, TElement } from 'platejs';
 
 import { useEditorRef } from 'platejs/react';
 
-import type { BaseTemplateElement } from '../types';
-
 import { useTemplatePluginContext } from './use-template-plugin-context';
 
-export function useTemplateField(element: BaseTemplateElement) {
+// More flexible type that accepts any element that might have a field property
+type TemplateElement = TElement & { field?: any };
+
+export function useTemplateField(element: TemplateElement) {
   const editor = useEditorRef();
   const { fields, removeField, updateField } = useTemplatePluginContext();
   // Extract field from element

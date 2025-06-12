@@ -1,5 +1,4 @@
 // src/plugins/template/types.ts
-import { SlateRenderElementProps, TElement } from "@udecode/plate";
 
 /**
  * Template field data structure
@@ -30,52 +29,6 @@ export interface TemplateField {
 export interface TemplatePluginOptions {
   /** Template fields available in the editor */
   fields: TemplateField[];
-}
-
-/**
- * Template inline element structure
- */
-export interface TemplateInlineElementType extends TElement {
-  children: [{ text: string }];
-  field: TemplateField;
-  type: "template-inline";
-}
-
-/**
- * Template block element structure
- */
-export interface TemplateBlockElementType extends TElement {
-  children: [{ text: string }];
-  field: TemplateField;
-  type: "template-block";
-}
-
-/**
- * Base template element that may or may not have a field
- */
-export type TemplateElementType =
-  | TemplateBlockElementType
-  | TemplateInlineElementType;
-
-/**
- * Template element with optional field property for more flexible usage
- */
-export interface BaseTemplateElement extends TElement {
-  field?: TemplateField;
-}
-
-/**
- * Props for inline template field element
- */
-export interface TemplateInlineElementProps extends SlateRenderElementProps {
-  element: TemplateInlineElementType;
-}
-
-/**
- * Props for block template field element
- */
-export interface TemplateBlockElementProps extends SlateRenderElementProps {
-  element: TemplateBlockElementType;
 }
 
 /**

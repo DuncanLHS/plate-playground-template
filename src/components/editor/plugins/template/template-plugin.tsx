@@ -2,34 +2,7 @@
 import { createPlatePlugin } from 'platejs/react';
 import { TemplateBlockElement } from './components/template-block-element';
 import { TemplateInlineElement } from './components/template-inline-element';
-
-// Define the structure for template field options
-export interface TemplateField {
-  label: string;      // Friendly name shown in the UI
-  key: string;        // Unique identifier for the field
-  path: string;       // JSON path to value in the data object
-  type: string;       // Data type (string, number, date, array, etc.)
-  isBlock?: boolean;  // Whether field is inline or a block element
-  options?: Record<string, any>; // Field-specific configuration
-}
-
-// Define the structure for template plugin options
-export interface TemplatePluginOptions {
-  fields: TemplateField[];
-}
-
-// Define types for the template elements
-export interface TemplateInlineElement {
-  children: [{ text: '' }];
-  field: TemplateField;
-  type: 'template-inline';
-}
-
-export interface TemplateBlockElement {
-  type: 'template-block';
-  field: TemplateField;
-  children: [{ text: '' }];
-}
+import type { TemplateField, TemplatePluginOptions } from './types';
 
 // Create the template inline plugin
 export const TemplateInlinePlugin = createPlatePlugin({

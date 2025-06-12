@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Pencil, Trash2 } from 'lucide-react';
+import type { TElement } from 'platejs';
 import { PlateElement, PlateElementProps } from 'platejs/react';
 
 import {
@@ -13,11 +14,25 @@ import {
 
 import { useTemplateField } from '../hooks/use-template-field';
 
+// Define the template inline element type inline
+interface TemplateInlineElement extends TElement {
+  type: 'template-inline';
+  field?: {
+    label: string;
+    key: string;
+    path: string;
+    type: string;
+    isBlock?: boolean;
+    options?: Record<string, any>;
+  };
+}
+
 export const TemplateInlineElement = React.forwardRef<
   HTMLDivElement,
-  PlateElementProps
+  PlateElementProps<TemplateInlineElement>
 >(({ children, element, ...props }, ref) => {
-  const { field, formatLabel, handleEdit, handleRemove } = useTemplateField(element as any);
+  // Now element is properly typed as TemplateInlineElement
+  const { field, formatLabel, handleEdit, handleRemove } = useTemplateField(element);
   if (!field) {
     return (
       <PlateElement

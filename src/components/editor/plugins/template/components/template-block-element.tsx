@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Pencil, Trash2 } from 'lucide-react';
+import type { TElement } from 'platejs';
 
 import {
   DropdownMenu,
@@ -13,11 +14,24 @@ import {
 import { PlateElement, PlateElementProps } from 'platejs/react';
 import { useTemplateField } from '../hooks/use-template-field';
 
+// Define the template block element type inline
+interface TemplateBlockElement extends TElement {
+  type: 'template-block';
+  field?: {
+    label: string;
+    key: string;
+    path: string;
+    type: string;
+    isBlock?: boolean;
+    options?: Record<string, any>;
+  };
+}
+
 export const TemplateBlockElement = React.forwardRef<
   HTMLDivElement,
-  PlateElementProps
+  PlateElementProps<TemplateBlockElement>
 >(({ children, element, ...props }, ref) => {
-  const { field, formatLabel, handleEdit, handleRemove } = useTemplateField(element as any);
+  const { field, formatLabel, handleEdit, handleRemove } = useTemplateField(element);
 
   if (!field) {
     return (
