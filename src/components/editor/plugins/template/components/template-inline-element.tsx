@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Pencil, Trash2 } from 'lucide-react';
+import { Ellipsis, Trash2 } from 'lucide-react';
 import type { TElement } from 'platejs';
 import { PlateElement, PlateElementProps } from 'platejs/react';
 
@@ -60,34 +60,36 @@ export const TemplateInlineElement = React.forwardRef<
       default:
         return 'bg-gray-100 text-gray-800 border-gray-300';
     }
-  };
-  return (
+  };  return (
     <PlateElement {...props} element={element} ref={ref} className="relative inline-block">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <span
-            className={`inline-block px-1.5 py-0.5 rounded border ${getTypeColor()} cursor-pointer`}
-            contentEditable={false}
-          >
-            {formatLabel()}
-          </span>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <div className="p-2 text-xs text-gray-500">
-            <div>Type: {field.type}</div>
-            <div>Path: {field.path}</div>
-          </div>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="cursor-pointer" onClick={handleEdit}>
-            <Pencil className="mr-2 h-4 w-4" />
-            <span>Edit field</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer text-red-600" onClick={handleRemove}>
-            <Trash2 className="mr-2 h-4 w-4" />
-            <span>Remove field</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <span
+        className={`inline-flex items-center px-1.5 py-0.5 rounded border ${getTypeColor()}`}
+        contentEditable={false}
+      >
+        <span className="mr-1">{formatLabel()}</span>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="cursor-pointer">
+            <span className="text-gray-500 hover:text-gray-700">
+              <Ellipsis className="h-3 w-3" />
+            </span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <div className="p-2 text-xs text-gray-500">
+              <div>Type: {field.type}</div>
+              <div>Path: {field.path}</div>
+            </div>
+            <DropdownMenuSeparator />
+            {/* <DropdownMenuItem className="cursor-pointer" onClick={handleEdit}>
+              <Pencil className="mr-2 h-4 w-4" />
+              <span>Edit field</span>
+            </DropdownMenuItem> */}
+            <DropdownMenuItem className="cursor-pointer text-red-600" onClick={handleRemove}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              <span>Remove field</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </span>
       {children}
     </PlateElement>
   );

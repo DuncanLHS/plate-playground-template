@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Pencil, Trash2 } from 'lucide-react';
+import { Ellipsis, Trash2 } from 'lucide-react';
 import type { TElement } from 'platejs';
 
 import {
@@ -64,11 +64,7 @@ export const TemplateBlockElement = React.forwardRef<
           <DropdownMenu>
             <DropdownMenuTrigger className="cursor-pointer">
               <span className="text-gray-500 hover:text-gray-700">
-                <svg fill="none" height="16" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="1" />
-                  <circle cx="19" cy="12" r="1" />
-                  <circle cx="5" cy="12" r="1" />
-                </svg>
+                <Ellipsis className="h-4 w-4" />
               </span>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -77,10 +73,10 @@ export const TemplateBlockElement = React.forwardRef<
                 <div>Path: {field.path}</div>
               </div>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer" onClick={handleEdit}>
+              {/* <DropdownMenuItem className="cursor-pointer" onClick={handleEdit}>
                 <Pencil className="mr-2 h-4 w-4" />
                 <span>Edit field</span>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem className="cursor-pointer text-red-600" onClick={handleRemove}>
                 <Trash2 className="mr-2 h-4 w-4" />
                 <span>Remove field</span>
