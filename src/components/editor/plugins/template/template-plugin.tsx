@@ -10,7 +10,7 @@ export const TemplateInlinePlugin = createPlatePlugin({
   node: {
     isElement: true,
     isInline: true,
-    isVoid: true,
+    isVoid: false,
   },
   options: {
     hotkey: ['mod+shift+f'],
@@ -22,7 +22,7 @@ export const TemplateBlockPlugin = createPlatePlugin({
   key: 'template-block',
   node: {
     isElement: true,
-    isVoid: true,
+    isVoid: false,
   },
 }).withComponent(TemplateBlockElement);
 
