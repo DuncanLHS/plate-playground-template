@@ -1,17 +1,18 @@
 'use client';
 
-import * as React from 'react';
-
 import { formatCodeBlock, isLangSupported } from '@platejs/code-block';
 import { BracesIcon, Check, CheckIcon, CopyIcon } from 'lucide-react';
-import { type TCodeBlockElement, type TCodeSyntaxLeaf, NodeApi } from 'platejs';
+import { NodeApi, type TCodeBlockElement, type TCodeSyntaxLeaf } from 'platejs';
 import {
-  type PlateElementProps,
-  type PlateLeafProps,
   PlateElement,
+  type PlateElementProps,
   PlateLeaf,
+  type PlateLeafProps,
+  useEditorRef,
+  useElement,
+  useReadOnly,
 } from 'platejs/react';
-import { useEditorRef, useElement, useReadOnly } from 'platejs/react';
+import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -34,7 +35,7 @@ export function CodeBlockElement(props: PlateElementProps<TCodeBlockElement>) {
 
   return (
     <PlateElement
-      className="py-1 **:[.hljs-addition]:bg-[#f0fff4] **:[.hljs-addition]:text-[#22863a] **:[.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable]:text-[#005cc5] **:[.hljs-built_in,.hljs-symbol]:text-[#e36209] **:[.hljs-bullet]:text-[#735c0f] **:[.hljs-comment,.hljs-code,.hljs-formula]:text-[#6a737d] **:[.hljs-deletion]:bg-[#ffeef0] **:[.hljs-deletion]:text-[#b31d28] **:[.hljs-emphasis]:italic **:[.hljs-keyword,.hljs-doctag,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_]:text-[#d73a49] **:[.hljs-name,.hljs-quote,.hljs-selector-tag,.hljs-selector-pseudo]:text-[#22863a] **:[.hljs-regexp,.hljs-string,.hljs-meta_.hljs-string]:text-[#032f62] **:[.hljs-section]:font-bold **:[.hljs-section]:text-[#005cc5] **:[.hljs-strong]:font-bold **:[.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_]:text-[#6f42c1]"
+      className="py-1 **:[.hljs-addition]:bg-[#f0fff4] **:[.hljs-addition]:text-[#22863a] dark:**:[.hljs-addition]:bg-[#3c5743] dark:**:[.hljs-addition]:text-[#ceead5] **:[.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable]:text-[#005cc5] dark:**:[.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable]:text-[#6596cf] **:[.hljs-built\\\\_in,.hljs-symbol]:text-[#e36209] dark:**:[.hljs-built\\\\_in,.hljs-symbol]:text-[#c3854e] **:[.hljs-bullet]:text-[#735c0f] **:[.hljs-comment,.hljs-code,.hljs-formula]:text-[#6a737d] dark:**:[.hljs-comment,.hljs-code,.hljs-formula]:text-[#6a737d] **:[.hljs-deletion]:bg-[#ffeef0] **:[.hljs-deletion]:text-[#b31d28] dark:**:[.hljs-deletion]:bg-[#473235] dark:**:[.hljs-deletion]:text-[#e7c7cb] **:[.hljs-emphasis]:italic **:[.hljs-keyword,.hljs-doctag,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language\\\\_]:text-[#d73a49] dark:**:[.hljs-keyword,.hljs-doctag,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language\\\\_]:text-[#ee6960] **:[.hljs-name,.hljs-quote,.hljs-selector-tag,.hljs-selector-pseudo]:text-[#22863a] dark:**:[.hljs-name,.hljs-quote,.hljs-selector-tag,.hljs-selector-pseudo]:text-[#36a84f] **:[.hljs-regexp,.hljs-string,.hljs-meta_.hljs-string]:text-[#032f62] dark:**:[.hljs-regexp,.hljs-string,.hljs-meta_.hljs-string]:text-[#3593ff] **:[.hljs-section]:font-bold **:[.hljs-section]:text-[#005cc5] dark:**:[.hljs-section]:text-[#61a5f2] **:[.hljs-strong]:font-bold **:[.hljs-title,.hljs-title.class\\\\_,.hljs-title.class\\\\_.inherited\\\\_\\\\_,.hljs-title.function\\\\_]:text-[#6f42c1] dark:**:[.hljs-title,.hljs-title.class\\\\_,.hljs-title.class\\\\_.inherited\\\\_\\\\_,.hljs-title.function\\\\_]:text-[#a77bfa]"
       {...props}
     >
       <div className="relative rounded-md bg-muted/50">
@@ -43,16 +44,16 @@ export function CodeBlockElement(props: PlateElementProps<TCodeBlockElement>) {
         </pre>
 
         <div
-          className="absolute top-1 right-1 z-10 flex gap-0.5 select-none"
+          className="absolute top-1 right-1 z-10 flex select-none gap-0.5"
           contentEditable={false}
         >
           {isLangSupported(element.lang) && (
             <Button
-              size="icon"
-              variant="ghost"
               className="size-6 text-xs"
               onClick={() => formatCodeBlock(editor, { element })}
+              size="icon"
               title="Format code"
+              variant="ghost"
             >
               <BracesIcon className="!size-3.5 text-muted-foreground" />
             </Button>
@@ -61,10 +62,10 @@ export function CodeBlockElement(props: PlateElementProps<TCodeBlockElement>) {
           <CodeBlockCombobox />
 
           <CopyButton
+            className="size-6 gap-1 text-muted-foreground text-xs"
             size="icon"
-            variant="ghost"
-            className="size-6 gap-1 text-xs text-muted-foreground"
             value={() => NodeApi.string(element)}
+            variant="ghost"
           />
         </div>
       </div>
@@ -93,14 +94,14 @@ function CodeBlockCombobox() {
   if (readOnly) return null;
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         <Button
+          aria-expanded={open}
+          className="h-6 select-none justify-between gap-1 px-2 text-muted-foreground text-xs"
+          role="combobox"
           size="sm"
           variant="ghost"
-          className="h-6 justify-between gap-1 px-2 text-xs text-muted-foreground select-none"
-          aria-expanded={open}
-          role="combobox"
         >
           {languages.find((language) => language.value === value)?.label ??
             'Plain Text'}
@@ -113,9 +114,9 @@ function CodeBlockCombobox() {
         <Command shouldFilter={false}>
           <CommandInput
             className="h-9"
-            value={searchValue}
             onValueChange={(value) => setSearchValue(value)}
             placeholder="Search language..."
+            value={searchValue}
           />
           <CommandEmpty>No language found.</CommandEmpty>
 
@@ -123,9 +124,8 @@ function CodeBlockCombobox() {
             <CommandGroup>
               {items.map((language) => (
                 <CommandItem
-                  key={language.label}
                   className="cursor-pointer"
-                  value={language.value}
+                  key={language.label}
                   onSelect={(value) => {
                     editor.tf.setNodes<TCodeBlockElement>(
                       { lang: value },
@@ -134,6 +134,7 @@ function CodeBlockCombobox() {
                     setSearchValue(value);
                     setOpen(false);
                   }}
+                  value={language.value}
                 >
                   <Check
                     className={cn(

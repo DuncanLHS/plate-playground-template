@@ -1,12 +1,11 @@
 'use client';
 
-import type { ExtendConfig, Path } from 'platejs';
-
 import {
   type BaseCommentConfig,
   BaseCommentPlugin,
   getDraftCommentKey,
 } from '@platejs/comment';
+import type { ExtendConfig, Path } from 'platejs';
 import { isSlateString } from 'platejs';
 import { toTPlatePlugin } from 'platejs/react';
 
@@ -17,7 +16,6 @@ type CommentConfig = ExtendConfig<
   {
     activeId: string | null;
     commentingBlock: Path | null;
-    hotkey: string[];
     hoverId: string | null;
     uniquePathMap: Map<string, Path>;
   }
@@ -95,4 +93,4 @@ export const commentPlugin = toTPlatePlugin<CommentConfig>(BaseCommentPlugin, {
     },
   });
 
-export const CommentKit = [commentPlugin.withComponent(CommentLeaf)];
+export const CommentKit = [commentPlugin];

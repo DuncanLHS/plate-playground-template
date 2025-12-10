@@ -1,10 +1,10 @@
 # Playground Template
 
-A Next.js 15 template with [Plate](https://platejs.org/) AI, plugins and components.
+A Next.js template with [Plate](https://platejs.org/) AI, plugins and components.
 
 ## Features
 
-- Next.js 15 App Directory
+- Next.js 16
 - [Plate](https://platejs.org/) editor
 - [shadcn/ui](https://ui.shadcn.com/)
 - [MCP](https://platejs.org/docs/components/mcp)
@@ -12,7 +12,7 @@ A Next.js 15 template with [Plate](https://platejs.org/) AI, plugins and compone
 ## Requirements
 
 - Node.js 20+
-- pnpm 9+
+- bun
 
 ## Installation
 
@@ -21,7 +21,7 @@ Choose one of these methods:
 ### 1. Using CLI (Recommended)
 
 ```bash
-npx shadcn@latest add https://platejs.org/r/editor-ai
+npx shadcn@latest add @plate/editor-ai
 ```
 
 ### 2. Using Template
@@ -29,7 +29,7 @@ npx shadcn@latest add https://platejs.org/r/editor-ai
 [Use this template](https://github.com/udecode/plate-playground-template/generate), then install dependencies:
 
 ```bash
-pnpm install
+bun install
 ```
 
 ## Development
@@ -42,13 +42,13 @@ cp .env.example .env.local
 
 Configure `.env.local`:
 
-- `OPENAI_API_KEY` – OpenAI API key ([get one here](https://platform.openai.com/account/api-keys))
+- `AI_GATEWAY_API_KEY` – AI Gateway API key ([get one here](https://vercel.com/ai-gateway))
 - `UPLOADTHING_TOKEN` – UploadThing API key ([get one here](https://uploadthing.com/dashboard))
 
 Start the development server:
 
 ```bash
-pnpm dev
+bun dev
 ```
 
 Visit http://localhost:3000/editor to see the editor in action.

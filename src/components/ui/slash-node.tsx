@@ -1,9 +1,5 @@
 'use client';
 
-import * as React from 'react';
-
-import type { PlateEditor, PlateElementProps } from 'platejs/react';
-
 import { AIChatPlugin } from '@platejs/ai/react';
 import {
   CalendarIcon,
@@ -16,6 +12,7 @@ import {
   LightbulbIcon,
   ListIcon,
   ListOrdered,
+  PenToolIcon,
   PilcrowIcon,
   Quote,
   RadicalIcon,
@@ -24,8 +21,10 @@ import {
   Table,
   TableOfContentsIcon,
 } from 'lucide-react';
-import { type TComboboxInputElement, KEYS } from 'platejs';
+import { KEYS, type TComboboxInputElement } from 'platejs';
+import type { PlateEditor, PlateElementProps } from 'platejs/react';
 import { PlateElement } from 'platejs/react';
+import type * as React from 'react';
 
 import {
   insertBlock,
@@ -44,18 +43,16 @@ import {
 
 type Group = {
   group: string;
-  items: Item[];
+  items: {
+    icon: React.ReactNode;
+    value: string;
+    onSelect: (editor: PlateEditor, value: string) => void;
+    className?: string;
+    focusEditor?: boolean;
+    keywords?: string[];
+    label?: string;
+  }[];
 };
-
-interface Item {
-  icon: React.ReactNode;
-  value: string;
-  onSelect: (editor: PlateEditor, value: string) => void;
-  className?: string;
-  focusEditor?: boolean;
-  keywords?: string[];
-  label?: string;
-}
 
 const groups: Group[] = [
   {
@@ -149,7 +146,7 @@ const groups: Group[] = [
     ].map((item) => ({
       ...item,
       onSelect: (editor, value) => {
-        insertBlock(editor, value);
+        insertBlock(editor, value, { upsert: true });
       },
     })),
   },
@@ -173,10 +170,16 @@ const groups: Group[] = [
         label: 'Equation',
         value: KEYS.equation,
       },
+      {
+        icon: <PenToolIcon />,
+        keywords: ['excalidraw'],
+        label: 'Excalidraw',
+        value: KEYS.excalidraw,
+      },
     ].map((item) => ({
       ...item,
       onSelect: (editor, value) => {
-        insertBlock(editor, value);
+        insertBlock(editor, value, { upsert: true });
       },
     })),
   },
@@ -211,7 +214,7 @@ export function SlashInputElement(
   const { editor, element } = props;
 
   return (
-    <PlateElement {...props} as="span" data-slate-value={element.value}>
+    <PlateElement {...props} as="span">
       <InlineCombobox element={element} trigger="/">
         <InlineComboboxInput />
 
@@ -225,13 +228,13 @@ export function SlashInputElement(
               {items.map(
                 ({ focusEditor, icon, keywords, label, value, onSelect }) => (
                   <InlineComboboxItem
-                    key={value}
-                    value={value}
-                    onClick={() => onSelect(editor, value)}
-                    label={label}
                     focusEditor={focusEditor}
                     group={group}
+                    key={value}
                     keywords={keywords}
+                    label={label}
+                    onClick={() => onSelect(editor, value)}
+                    value={value}
                   >
                     <div className="mr-2 text-muted-foreground">{icon}</div>
                     {label ?? value}
