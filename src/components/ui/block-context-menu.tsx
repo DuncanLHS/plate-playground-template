@@ -7,9 +7,13 @@ import {
   BlockSelectionPlugin,
 } from '@platejs/selection/react';
 import { KEYS } from 'platejs';
-import { useEditorPlugin, usePlateState, usePluginOption } from 'platejs/react';
+import {
+  useEditorPlugin,
+  useEditorReadOnly,
+  usePluginOption,
+} from 'platejs/react';
 import * as React from 'react';
-
+import { setBlockType } from '@/components/editor/transforms';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -28,7 +32,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
   const { api, editor } = useEditorPlugin(BlockMenuPlugin);
   const [value, setValue] = React.useState<Value>(null);
   const isTouch = useIsTouchDevice();
-  const [readOnly] = usePlateState('readOnly');
+  const readOnly = useEditorReadOnly();
   const openId = usePluginOption(BlockMenuPlugin, 'openId');
   const isOpen = openId === BLOCK_CONTEXT_MENU_ID;
 
@@ -37,14 +41,8 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
       editor
         .getApi(BlockSelectionPlugin)
         .blockSelection.getNodes()
-        .forEach(([node, path]) => {
-          if (node[KEYS.listType]) {
-            editor.tf.unsetNodes([KEYS.listType, 'indent'], {
-              at: path,
-            });
-          }
-
-          editor.tf.toggleBlock(type, { at: path });
+        .forEach(([, path]) => {
+          setBlockType(editor, type, { at: path });
         });
     },
     [editor]
@@ -155,6 +153,11 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
                   onClick={() => handleTurnInto(KEYS.blockquote)}
                 >
                   Blockquote
+                </ContextMenuItem>
+                <ContextMenuItem
+                  onClick={() => handleTurnInto(KEYS.codeDrawing)}
+                >
+                  Code Drawing
                 </ContextMenuItem>
               </ContextMenuSubContent>
             </ContextMenuSub>

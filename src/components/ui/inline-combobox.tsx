@@ -20,7 +20,7 @@ import {
   useHTMLInputCursorState,
 } from '@platejs/combobox/react';
 import { cva } from 'class-variance-authority';
-import type { Point, TElement } from 'platejs';
+import type { PointRef, TElement } from 'platejs';
 import { useComposedRef, useEditorRef } from 'platejs/react';
 import * as React from 'react';
 
@@ -87,6 +87,17 @@ const InlineCombobox = ({
   const hasValueProp = valueProp !== undefined;
   const value = hasValueProp ? valueProp : valueState;
 
+  // Check if current user is the creator of this element (for Yjs collaboration)
+  const isCreator = React.useMemo(() => {
+    const elementUserId = (element as any).userId;
+    const currentUserId = editor.meta.userId;
+
+    // If no userId (backwards compatibility or non-Yjs), allow
+    if (!elementUserId) return true;
+
+    return elementUserId === currentUserId;
+  }, [editor.meta.userId, element]);
+
   const setValue = React.useCallback(
     (newValue: string) => {
       setValueProp?.(newValue);
@@ -102,9 +113,12 @@ const InlineCombobox = ({
    * Track the point just before the input element so we know where to
    * insertText if the combobox closes due to a selection change.
    */
-  const insertPoint = React.useRef<Point | null>(null);
+  const insertPointRef = React.useRef<PointRef | null>(null);
 
   React.useEffect(() => {
+    insertPointRef.current?.unref();
+    insertPointRef.current = null;
+
     const path = editor.api.findPath(element);
 
     if (!path) return;
@@ -114,9 +128,12 @@ const InlineCombobox = ({
     if (!point) return;
 
     const pointRef = editor.api.pointRef(point);
-    insertPoint.current = pointRef.current;
+    insertPointRef.current = pointRef;
 
     return () => {
+      if (insertPointRef.current === pointRef) {
+        insertPointRef.current = null;
+      }
       pointRef.unref();
     };
   }, [editor, element]);
@@ -124,11 +141,12 @@ const InlineCombobox = ({
   const { props: inputProps, removeInput } = useComboboxInput({
     cancelInputOnBlur: true,
     cursorState,
+    autoFocus: isCreator,
     ref: inputRef,
     onCancelInput: (cause) => {
       if (cause !== 'backspace') {
         editor.tf.insertText(trigger + value, {
-          at: insertPoint?.current ?? undefined,
+          at: insertPointRef.current?.current ?? undefined,
         });
       }
       if (cause === 'arrowLeft' || cause === 'arrowRight') {
@@ -258,6 +276,27 @@ const InlineComboboxContent: typeof ComboboxPopover = ({
   ...props
 }) => {
   // Portal prevents CSS from leaking into popover
+  const store = useComboboxContext();
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (!store) return;
+
+    const state = store.getState();
+    const { items, activeId } = state;
+
+    if (!items.length) return;
+
+    const currentIndex = items.findIndex((item) => item.id === activeId);
+
+    if (event.key === 'ArrowUp' && currentIndex <= 0) {
+      event.preventDefault();
+      store.setActiveId(store.last());
+    } else if (event.key === 'ArrowDown' && currentIndex >= items.length - 1) {
+      event.preventDefault();
+      store.setActiveId(store.first());
+    }
+  }
+
   return (
     <Portal>
       <ComboboxPopover
@@ -265,6 +304,7 @@ const InlineComboboxContent: typeof ComboboxPopover = ({
           'z-500 max-h-[288px] w-[300px] overflow-y-auto rounded-md bg-popover shadow-md',
           className
         )}
+        onKeyDownCapture={handleKeyDown}
         {...props}
       />
     </Portal>

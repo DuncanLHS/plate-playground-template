@@ -1,6 +1,6 @@
 'use client';
 
-import { normalizeNodeId } from 'platejs';
+import { normalizeStaticValue } from 'platejs';
 import { Plate, usePlateEditor } from 'platejs/react';
 
 import { EditorKit } from '@/components/editor/editor-kit';
@@ -33,7 +33,7 @@ export function PlateEditor() {
   );
 }
 
-const value = normalizeNodeId([
+const value = normalizeStaticValue([
   {
     children: [{ text: 'Welcome to the Plate Playground!' }],
     type: 'h1',
@@ -257,10 +257,37 @@ const value = normalizeNodeId([
       {
         children: [
           {
-            text: 'Blockquotes are great for highlighting important information.',
+            text: 'Blockquotes can group paragraphs, quoted lists, and reply chains.',
           },
         ],
         type: 'p',
+      },
+      {
+        children: [
+          {
+            text: 'Markdown blockquotes keep this nested structure instead of flattening it.',
+          },
+        ],
+        type: 'p',
+      },
+      {
+        children: [
+          {
+            text: 'Quoted list item inside the same container.',
+          },
+        ],
+        indent: 1,
+        listStyleType: 'disc',
+        type: 'p',
+      },
+      {
+        children: [
+          {
+            children: [{ text: 'Nested blockquotes work here too.' }],
+            type: 'p',
+          },
+        ],
+        type: 'blockquote',
       },
     ],
     type: 'blockquote',

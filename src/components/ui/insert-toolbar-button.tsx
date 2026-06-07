@@ -4,6 +4,7 @@ import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 import {
   CalendarIcon,
   ChevronRightIcon,
+  Code2,
   Columns3Icon,
   FileCodeIcon,
   FilmIcon,
@@ -21,6 +22,7 @@ import {
   QuoteIcon,
   RadicalIcon,
   SquareIcon,
+  SuperscriptIcon,
   TableIcon,
   TableOfContentsIcon,
 } from 'lucide-react';
@@ -178,6 +180,11 @@ const groups: Group[] = [
         label: 'Excalidraw',
         value: KEYS.excalidraw,
       },
+      {
+        icon: <Code2 />,
+        label: 'Code Drawing',
+        value: KEYS.codeDrawing,
+      },
     ].map((item) => ({
       ...item,
       onSelect: (editor, value) => {
@@ -198,6 +205,12 @@ const groups: Group[] = [
         icon: <CalendarIcon />,
         label: 'Date',
         value: KEYS.date,
+      },
+      {
+        focusEditor: true,
+        icon: <SuperscriptIcon />,
+        label: 'Footnote',
+        value: 'action_footnote',
       },
       {
         focusEditor: false,

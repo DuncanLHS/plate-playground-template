@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 const config: Record<
   string,
   {
-    Li: React.FC<PlateElementProps>;
+    Li: React.FC<PlateElementProps & { lineBreakBadge?: React.ReactNode }>;
     Marker: React.FC<PlateElementProps>;
   }
 > = {
@@ -31,11 +31,12 @@ const config: Record<
 
 export const BlockList: RenderNodeWrapper = (props) => {
   if (!props.element.listStyleType) return;
+  if (!isOrderedList(props.element)) return;
 
   return (props) => <List {...props} />;
 };
 
-function List(props: PlateElementProps) {
+function List(props: PlateElementProps & { lineBreakBadge?: React.ReactNode }) {
   const { listStart, listStyleType } = props.element as TListElement;
   const { Li, Marker } = config[listStyleType] ?? {};
   const List = isOrderedList(props.element) ? 'ol' : 'ul';
@@ -47,7 +48,14 @@ function List(props: PlateElementProps) {
       style={{ listStyleType }}
     >
       {Marker && <Marker {...props} />}
-      {Li ? <Li {...props} /> : <li>{props.children}</li>}
+      {Li ? (
+        <Li {...props} />
+      ) : (
+        <li>
+          {props.children}
+          {props.lineBreakBadge}
+        </li>
+      )}
     </List>
   );
 }
@@ -61,7 +69,7 @@ function TodoMarker(props: PlateElementProps) {
     <div contentEditable={false}>
       <Checkbox
         className={cn(
-          '-left-6 absolute top-1',
+          'absolute top-1 -left-6',
           readOnly && 'pointer-events-none'
         )}
         {...checkboxProps}
@@ -70,7 +78,9 @@ function TodoMarker(props: PlateElementProps) {
   );
 }
 
-function TodoLi(props: PlateElementProps) {
+function TodoLi(
+  props: PlateElementProps & { lineBreakBadge?: React.ReactNode }
+) {
   return (
     <li
       className={cn(
@@ -80,6 +90,7 @@ function TodoLi(props: PlateElementProps) {
       )}
     >
       {props.children}
+      {props.lineBreakBadge}
     </li>
   );
 }

@@ -18,6 +18,7 @@ import {
   RadicalIcon,
   SparklesIcon,
   Square,
+  SuperscriptIcon,
   Table,
   TableOfContentsIcon,
 } from 'lucide-react';
@@ -176,6 +177,19 @@ const groups: Group[] = [
         label: 'Excalidraw',
         value: KEYS.excalidraw,
       },
+      {
+        icon: <Code2 />,
+        keywords: [
+          'code-drawing',
+          'diagram',
+          'plantuml',
+          'graphviz',
+          'flowchart',
+          'mermaid',
+        ],
+        label: 'Code Drawing',
+        value: KEYS.codeDrawing,
+      },
     ].map((item) => ({
       ...item,
       onSelect: (editor, value) => {
@@ -192,6 +206,13 @@ const groups: Group[] = [
         keywords: ['time'],
         label: 'Date',
         value: KEYS.date,
+      },
+      {
+        focusEditor: true,
+        icon: <SuperscriptIcon />,
+        keywords: ['citation', 'fn', 'footnote', '[^]'],
+        label: 'Footnote',
+        value: 'action_footnote',
       },
       {
         focusEditor: false,
